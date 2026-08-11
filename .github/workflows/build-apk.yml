@@ -18,7 +18,7 @@ jobs:
           mkdir project
           unzip -o DoctorAppointments-1.zip -d project
 
-      - name: Ensure gradle.properties has required settings
+      - name: Ensure gradle.properties has required flags
         run: |
           echo "android.useAndroidX=true" >> project/gradle.properties
           echo "android.enableJetifier=true" >> project/gradle.properties
@@ -34,7 +34,7 @@ jobs:
 
       - name: Generate Gradle Wrapper
         working-directory: project
-        run: gradle wrapper --gradle-version 8.4
+        run: gradle wrapper --gradle-version=8.7
 
       - name: Grant execute permission for gradlew
         working-directory: project
@@ -48,13 +48,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
-          path: project/app/build/outputs/apk/debug/app-debug.apk
-      - name: Build Debug APK
-        working-directory: project
-        run: ./gradlew assembleDebug --no-daemon
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-debug-apk
-          path: project/app/build/outputs/apk/debug/app-debug.apk
+          path: project/app/build/outputs/apk/debug/*.apk
