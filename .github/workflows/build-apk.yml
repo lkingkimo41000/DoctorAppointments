@@ -18,6 +18,11 @@ jobs:
           mkdir project
           unzip -o DoctorAppointments-1.zip -d project
 
+      - name: Ensure gradle.properties has required settings
+        run: |
+          echo "android.useAndroidX=true" >> project/gradle.properties
+          echo "android.enableJetifier=true" >> project/gradle.properties
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -35,6 +40,15 @@ jobs:
         working-directory: project
         run: chmod +x gradlew
 
+      - name: Build Debug APK
+        working-directory: project
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: project/app/build/outputs/apk/debug/app-debug.apk
       - name: Build Debug APK
         working-directory: project
         run: ./gradlew assembleDebug --no-daemon
